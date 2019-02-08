@@ -3,6 +3,7 @@
 import cryptocompare
 import datetime
 import time
+import pandas as pd
 
 coins = ['BTC', 'ETH', 'XMR', 'NEO']
 currencies = ['EUR', 'USD', 'GBP']
@@ -52,3 +53,6 @@ print(cryptocompare.get_avg(coins[0], curr='USD', exchange='Coinbase'))
 
 print('====================== EXCHANGES =================')
 print(cryptocompare.get_exchanges())
+
+print('====================== HIST SOCIAL DAY =================')
+print(cryptocompare.get_historical_social_day())

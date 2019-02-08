@@ -13,7 +13,7 @@ URL_HIST_PRICE_HOUR = 'https://min-api.cryptocompare.com/data/histohour?fsym={}&
 URL_HIST_PRICE_MINUTE = 'https://min-api.cryptocompare.com/data/histominute?fsym={}&tsym={}&limit={}'
 URL_AVG = 'https://min-api.cryptocompare.com/data/generateAvg?fsym={}&tsym={}&e={}'
 URL_EXCHANGES = 'https://www.cryptocompare.com/api/data/exchanges'
-URL_HIST_SOCIAL_DAY = 'https://min-api.cryptocompare.com/data/social/coin/histo/day'
+URL_HIST_SOCIAL_DAY = 'https://min-api.cryptocompare.com/data/social/coin/histo/day?coinId={}&limit={}&api_key={}'
 
 # FIELDS
 PRICE = 'PRICE'
@@ -25,8 +25,11 @@ CHANGE_PERCENT = 'CHANGEPCT24HOUR'
 MARKETCAP = 'MKTCAP'
 
 # DEFAULTS
-CURR = 'EUR'
+CURR = 'USD'
 LIMIT = 1440
+
+# My API key
+api_key= 'effcb878d915f6bcaf69681e95b3fb61a6f0649626e80aa6655d1ff2c8b349a7'
 ###############################################################################
 
 
@@ -70,11 +73,13 @@ def get_price(coin, curr=CURR, full=False):
     else:
         return query_cryptocompare(URL_PRICE.format(coin, format_parameter(curr)))
 
+
 def get_historical_price(coin, curr=CURR, timestamp=time.time(), exchange='CCCAGG'):
     if isinstance(timestamp, datetime.datetime):
         timestamp = time.mktime(timestamp.timetuple())
     return query_cryptocompare(URL_HIST_PRICE.format(coin, format_parameter(curr),
         int(timestamp), format_parameter(exchange)))
+
 
 def get_historical_price_day(coin, curr=CURR):
     return query_cryptocompare(URL_HIST_PRICE_DAY.format(coin, format_parameter(curr)))
@@ -100,7 +105,7 @@ def get_exchanges():
         return response['Data']
 
 
-def get_historical_social_day():
-    response = query_cryptocompare(URL_HIST_SOCIAL_DAY)
+def get_historical_social_day(coinId=1182, limit=2000, api_key=api_key):
+    response = query_cryptocompare(URL_HIST_SOCIAL_DAY.format(coinId, limit, api_key))
     if response:
         return response['Data']
