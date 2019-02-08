@@ -13,6 +13,7 @@ URL_HIST_PRICE_HOUR = 'https://min-api.cryptocompare.com/data/histohour?fsym={}&
 URL_HIST_PRICE_MINUTE = 'https://min-api.cryptocompare.com/data/histominute?fsym={}&tsym={}&limit={}'
 URL_AVG = 'https://min-api.cryptocompare.com/data/generateAvg?fsym={}&tsym={}&e={}'
 URL_EXCHANGES = 'https://www.cryptocompare.com/api/data/exchanges'
+URL_HIST_SOCIAL_DAY = 'https://min-api.cryptocompare.com/data/social/coin/histo/day'
 
 # FIELDS
 PRICE = 'PRICE'
@@ -28,7 +29,8 @@ CURR = 'EUR'
 LIMIT = 1440
 ###############################################################################
 
-def query_cryptocompare(url,errorCheck=True):
+
+def query_cryptocompare(url, errorCheck=True):
     try:
         response = requests.get(url).json()
     except Exception as e:
@@ -39,6 +41,7 @@ def query_cryptocompare(url,errorCheck=True):
         return None
     return response
 
+
 def format_parameter(parameter):
     if isinstance(parameter, list):
         return ','.join(parameter)
@@ -47,12 +50,14 @@ def format_parameter(parameter):
 
 ###############################################################################
 
+
 def get_coin_list(format=False):
     response = query_cryptocompare(URL_COIN_LIST, False)['Data']
     if format:
         return list(response.keys())
     else:
         return response
+
 
 # TODO: add option to filter json response according to a list of fields
 def get_price(coin, curr=CURR, full=False):
@@ -74,18 +79,28 @@ def get_historical_price(coin, curr=CURR, timestamp=time.time(), exchange='CCCAG
 def get_historical_price_day(coin, curr=CURR):
     return query_cryptocompare(URL_HIST_PRICE_DAY.format(coin, format_parameter(curr)))
 
+
 def get_historical_price_hour(coin, curr=CURR):
     return query_cryptocompare(URL_HIST_PRICE_HOUR.format(coin, format_parameter(curr)))
 
+
 def get_historical_price_minute(coin, curr=CURR, limit=LIMIT):
     return query_cryptocompare(URL_HIST_PRICE_MINUTE.format(coin, format_parameter(curr), limit))
+
 
 def get_avg(coin, curr=CURR, exchange='CCCAGG'):
     response = query_cryptocompare(URL_AVG.format(coin, curr, format_parameter(exchange)))
     if response:
         return response['RAW']
 
+
 def get_exchanges():
     response = query_cryptocompare(URL_EXCHANGES)
+    if response:
+        return response['Data']
+
+
+def get_historical_social_day():
+    response = query_cryptocompare(URL_HIST_SOCIAL_DAY)
     if response:
         return response['Data']
